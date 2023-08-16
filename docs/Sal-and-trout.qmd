@@ -1,0 +1,70 @@
+---
+title: "Sal-and-trout"
+author: "Patty Park"
+output: html_document
+execute:
+  warning: false
+  message: false
+---
+
+
+
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+
+
+
+```{r}
+mack_verts <- read_csv(here("data", "AS00601.csv")) %>% clean_names()
+mack_verts
+mc_wt_5 <- mack_verts$weight[5]
+  #purrr::pluck(mack_verts, "WEIGHT", 5)
+mc_wt_5
+
+mc_length_8_20 <- mack_verts$length1[8:20]
+mc_length_8_20
+# mc_wt_5 <- mack_verts %>% 
+#   filter()
+
+mc_dates <- mack_verts$sampledate
+mc_dates
+
+```
+
+```{r}
+#scatterplot salamanders
+mc_salamanders <- dplyr::filter(mack_verts, species == "DITE")
+mc_salamanders
+
+salamander_size <- ggplot(data = mc_salamanders, aes(x = length1, y = weight)) + geom_jitter() + labs(x = "snout-vent length in millimeters", y = "weight (grams)", title = "snout-vent length based on weight")
+salamander_size
+ggsave(filename = here("figures", "salamander_size.png"), plot = salamander_size)
+```
+
+```{r}
+#cuttthroat graph
+mc_trout <- dplyr::filter(mack_verts, species == "ONCL")
+mc_trout
+
+trout_size <- ggplot(data = mc_trout, aes(x = length1, y = weight)) +
+  geom_jitter(aes(color = reach)) + 
+                labs(x = "length in millimeters", y = "weight (grams)", title = "length based on weight") + 
+  facet_wrap(vars(reach))
+trout_size
+
+ggsave(filename = here("figures", "cutthroat_size.png"), plot = trout_size)
+```
+
+
+
+
+
+
+
+
+
