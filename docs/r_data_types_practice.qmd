@@ -1,0 +1,76 @@
+---
+
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+
+```{r}
+vec_1 <- c(2, 5, 9, 10, 8, 12, 1, 0)
+
+class(vec_1)
+typeof(vec_1)
+vec_1_e3 <- vec_1[3]
+vec_1_e1 <- vec_1[1]
+vec_1_e5to7 <- vec_1[5:7]
+vec_1_char <- as.character(vec_1)
+
+
+vec_2 <- c(town = "Santa Barbara", location = "Rincon", swell = "south")
+class(vec_2)
+length(vec_2)
+vec_2_e2 <- vec_2[2]
+
+
+
+region <- c("A", "B", "A", "D")
+species <- c("otter", "great white", "sea lion", "gray whale")
+count <- c(12, 2, 36, 6)
+
+df_1 <- data.frame(region, species, count)
+class(df_1)
+class(df_1$species)
+max_count <- max(count)
+```
+
+
+```{r}
+mack_verts_p <- read_csv(here::here("data", "AS00601.csv")) %>% 
+  clean_names()
+
+```
+
+```{r}
+mc_wt_5 <- mack_verts_p$weight[5]
+mc_length_8_20 <- mack_verts_p$length1[8:20]
+mc_dates <- mack_verts_p[["sampledate"]]
+
+mc_salamanders <- mack_verts_p %>% 
+  filter(species == "DITE")
+
+mc_salamanders_scatter <- ggplot(data = mc_salamanders, aes(x = length1, y = weight)) + 
+  geom_point(color = "pink") + 
+  labs(x = "snout-vent length in millimeters", y = "weight (grams)", title = "Relationship between snout-vent length and weight")
+  
+ggsave(filename = here::here("figures", "salamander_size_p.png"), plot = mc_salamanders_scatter)
+```
+
+```{r}
+mc_trout <- mack_verts_p %>% 
+  filter(species == "ONCL")
+
+mc_trout_scatter <- ggplot(data = mc_trout, aes(x = length1, y = weight)) + 
+  geom_point() + 
+  scale_color_manual(values = c("L" = "red", "M" = "blue", "U" = "green")) +
+  facet_wrap(~reach) + 
+  labs(x = "Length of trout", y = "Weight of trout", title = "Relationship between length and weight of trout")
+mc_trout_scatter
+
+ggsave(filename = here::here("figures", "cutthroat_p.png"), plot = mc_trout_scatter)
+#why is scale_color_manual not working
+```
+
