@@ -64,10 +64,11 @@ mc_trout <- mack_verts_p %>%
   filter(species == "ONCL")
 
 mc_trout_scatter <- ggplot(data = mc_trout, aes(x = length1, y = weight)) + 
-  geom_point() + 
+  geom_point(aes(color = reach)) + 
   scale_color_manual(values = c("L" = "red", "M" = "blue", "U" = "green")) +
   facet_wrap(~reach) + 
   labs(x = "Length of trout", y = "Weight of trout", title = "Relationship between length and weight of trout")
+
 mc_trout_scatter
 
 ggsave(filename = here::here("figures", "cutthroat_p.png"), plot = mc_trout_scatter)
